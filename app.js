@@ -1,13 +1,34 @@
-var http = require('http'); // Core module at nodeJS, 
-                            //putting the module http in the variable http
-var module1 = require('./module1');
-var module2 = require('./module2');
+var url = require('url');
+var fs = require('fs');
 
-function onRequest(request, response){
-    response.writeHead(200, {'Content-Type': 'text/plain'});
-    response.write(module2.myVariable); 
-    module2.myFunction();   
-    response.end();
+function renderHTML(path, response) {
+    fs.readFile(path, null, function(error, data) {
+        if (error) {
+            response.writeHead(404);
+            response.write('File not found!');
+        } else {
+            response.write(data);
+        }
+        response.end();
+    });
 }
 
-http.createServer(onRequest).listen(8000);  
+module.exports = {
+  handleRequest: function(request, response) {
+      response.writeHead(200, {'Content-Type': 'text/html'});
+
+      var path = url.parse(request.url).pathname;
+      switch (path) {
+          case '/':
+              renderHTML('./index.html', response);
+              break;
+          case '/login':
+              renderHTML('./login.html', response);
+              break;
+          default:
+              response.writeHead(404);
+              response.write('Route not defined');
+              response.end();
+      }
+  }
+};
