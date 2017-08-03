@@ -1,3 +1,4 @@
 %%%%%   Notes of the NodeJS + Express course    %%%%%
 
 - The main difference between NodeJS and PHP is that in NodeJS we create our own server.
+
